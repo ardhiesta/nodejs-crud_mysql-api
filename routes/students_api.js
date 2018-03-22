@@ -87,4 +87,24 @@ router.put('/edit/:id', function(req, res){
 		});
 });
 
+// http://localhost:3000/api/students/search?keyword=rudi&sort=asc&col=name
+router.get('/search', function(req, res, next) {
+  connection.query('SELECT * FROM tbl_student WHERE '
+  +req.query.col+' like ? ORDER BY '
+  +req.query.col+' '+req.query.sort, 
+  [req.query.keyword],function(error, rows, fields) {
+    if (error) {
+      res.send(JSON.stringify({
+        "status": 500,
+        "error": error
+      }));
+    } else {
+      res.send(JSON.stringify({
+        "status": 200,
+        "data": rows
+      }));
+    }
+  });
+});
+
 module.exports = router;
