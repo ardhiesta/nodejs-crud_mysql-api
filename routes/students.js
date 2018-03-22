@@ -11,6 +11,7 @@ router.get('/', function(req, res, next) {
 	// Make a request for a user with a given ID
 	axios.get(config.server.host+'/api/students')
 	.then(function (response) {
+		console.log(response);
 		res.render('index', {title: 'Student List', data: response.data.data});
 	})
 	.catch(function (error) {
@@ -22,6 +23,24 @@ router.get('/', function(req, res, next) {
 router.get('/add', function(req, res, next) {
   // Render index.pug page using array 
   res.render('form_student', {title: 'Add Student'});
+});
+
+// http://localhost:3000/students/search?keyword=rudi&sort=asc&col=name
+router.get('/search', function(req, res, next) {
+	axios.get(config.server.host+'/api/students/search',{
+			params: {
+				keyword: req.query.keyword,
+				sort: req.query.sort,
+				col: req.query.col
+			}
+		})
+	.then(function (response) {
+		console.log(response);
+		res.send(response.data.data);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
 });
 
 router.post('/add', function(req, res, next) {
